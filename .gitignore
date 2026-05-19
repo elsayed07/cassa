@@ -8,3 +8,13 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Secrets
+.env
+
+# Test artifacts
+.coverage
+htmlcov/
+
+# Media uploads
+media/
