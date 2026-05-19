@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.number }} — Cassa{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-12">
+  <h1 class="text-2xl font-bold mb-6">Order #{{ order.number }}</h1>
+  <p class="text-sm text-zinc-500 mb-6">Status: {{ order.status }}</p>
+  {% for item in order.items.all %}
+    <div class="flex justify-between py-3 border-b border-zinc-100">
+      <span>{{ item.quantity }}× {{ item.product_name }}</span>
+      <span>{{ order.currency }} {{ item.line_total }}</span>
+    </div>
+  {% endfor %}
+  <div class="mt-4 text-right font-bold">Total: {{ order.currency }} {{ order.grand_total }}</div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Payment — Cassa{% endblock %}
+{% block extra_head %}
+  <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-12">
+  <h1 class="text-2xl font-bold mb-6">Payment</h1>
+  <p class="mb-4 text-zinc-600">Order <strong>#{{ order.number }}</strong> — {{ order.currency }} {{ order.grand_total }}</p>
+  <div id="payment-element" class="mb-4"></div>
+  <div id="payment-error" class="text-red-500 text-sm mb-4 hidden"></div>
+  <button id="submit-payment" class="w-full py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium">Pay Now</button>
+</div>
+<script>
+const stripe = Stripe("{{ STRIPE_PUBLISHABLE_KEY }}");
+const elements = stripe.elements({ clientSecret: "{{ client_secret }}" });
+const paymentElement = elements.create("payment");
+paymentElement.mount("#payment-element");
+document.getElementById("submit-payment").addEventListener("click", async () => {
+  const { error } = await stripe.confirmPayment({
+    elements,
+    confirmParams: { return_url: "{{ request.scheme }}://{{ request.get_host }}{% url 'orders:success' order.number %}" }
+  });
+  if (error) {
+    document.getElementById("payment-error").textContent = error.message;
+    document.getElementById("payment-error").classList.remove("hidden");
+  }
+});
+</script>
+{% endblock %}

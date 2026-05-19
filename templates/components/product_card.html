@@ -1,0 +1,20 @@
+{% load i18n %}
+<article class="group rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-md transition">
+  <a href="{% url 'catalog:product' product.slug %}">
+    {% with image=product.images.first %}
+      {% if image %}
+        <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:product }}" class="w-full h-48 object-cover group-hover:scale-105 transition">
+      {% else %}
+        <div class="w-full h-48 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400">No image</div>
+      {% endif %}
+    {% endwith %}
+    <div class="p-4">
+      <h3 class="font-medium truncate">{{ product }}</h3>
+      {% with variant=product.variants.first %}
+        {% if variant %}
+          <p class="text-sm text-zinc-500 mt-1">{{ product.currency }} {{ variant.price }}</p>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </a>
+</article>

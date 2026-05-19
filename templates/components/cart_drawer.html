@@ -1,0 +1,2 @@
+{% if error %}<p class="text-red-500 text-sm mb-2">{{ error }}</p>{% endif %}
+<span id="cart-count">{{ cart.item_count }}</span> items in cart — <a href="{% url 'carts:detail' %}" class="underline">View cart</a>

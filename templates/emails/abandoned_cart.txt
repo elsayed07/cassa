@@ -1,0 +1,1 @@
+You left {{ cart.item_count }} item{{ cart.item_count|pluralize }} in your cart. Visit {{ STORE_URL }}{% url 'carts:detail' %} to complete your purchase.

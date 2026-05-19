@@ -1,0 +1,8 @@
+{% for product in items %}
+  {% include "components/product_card.html" with product=product %}
+{% empty %}
+  <p class="text-zinc-500 col-span-full text-center py-12">No products found.</p>
+{% endfor %}
+{% if has_next %}
+  <div hx-get="?page={{ next_page }}" hx-trigger="intersect once" hx-swap="outerHTML" hx-target="this"></div>
+{% endif %}

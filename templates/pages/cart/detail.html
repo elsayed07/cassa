@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Cart — Cassa{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-12">
+  <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
+  {% if cart and cart.items.all %}
+    {% for item in cart.items.all %}
+      <div class="flex gap-4 py-4 border-b border-zinc-100 dark:border-zinc-800">
+        <div class="flex-1">
+          <p class="font-medium">{{ item.variant.sku }}</p>
+          <p class="text-sm text-zinc-500">{{ item.quantity }} × {{ item.unit_price }}</p>
+        </div>
+        <p class="font-medium">{{ item.line_total }}</p>
+        <form method="post" action="{% url 'carts:remove' %}">
+          {% csrf_token %}
+          <input type="hidden" name="variant_id" value="{{ item.variant_id }}">
+          <button class="text-red-500 text-sm">Remove</button>
+        </form>
+      </div>
+    {% endfor %}
+    <div class="mt-6 text-right">
+      <p class="text-lg font-bold">Subtotal: {{ cart.currency }} {{ cart.subtotal }}</p>
+    </div>
+    <div id="coupon-section" class="mt-4">
+      {% include "components/coupon_input.html" %}
+    </div>
+    <div class="mt-6">
+      <a href="{% url 'orders:checkout' %}" class="block w-full text-center py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium">Checkout</a>
+    </div>
+  {% else %}
+    <p class="text-zinc-500">Your cart is empty. <a href="/" class="underline">Continue shopping</a></p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Invoice #{{ order.number }}</title>
+<style>body{font-family:sans-serif;padding:40px} table{width:100%;border-collapse:collapse} td,th{padding:8px;border-bottom:1px solid #eee}</style>
+</head>
+<body>
+  <h1>Invoice — #{{ order.number }}</h1>
+  <p>Date: {{ order.created_at|date:"Y-m-d" }}</p>
+  <table>
+    <thead><tr><th>Item</th><th>SKU</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
+    <tbody>
+    {% for item in order.items.all %}
+      <tr>
+        <td>{{ item.product_name }}</td>
+        <td>{{ item.sku }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ order.currency }} {{ item.unit_price }}</td>
+        <td>{{ order.currency }} {{ item.line_total }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+      {% if order.discount %}<tr><td colspan="4">Discount</td><td>-{{ order.currency }} {{ order.discount }}</td></tr>{% endif %}
+      {% if order.tax %}<tr><td colspan="4">Tax</td><td>{{ order.currency }} {{ order.tax }}</td></tr>{% endif %}
+      <tr><td colspan="4"><strong>Grand Total</strong></td><td><strong>{{ order.currency }} {{ order.grand_total }}</strong></td></tr>
+    </tfoot>
+  </table>
+</body>
+</html>

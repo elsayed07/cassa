@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Search: {{ query }} — Cassa{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-12">
+  <form method="get" action="{% url 'catalog:search' %}" class="flex gap-2 mb-8">
+    <input name="q" value="{{ query }}" class="input flex-1" placeholder="Search products...">
+    <button type="submit" class="btn-primary">Search</button>
+  </form>
+  {% if query %}
+    <p class="text-sm text-zinc-500 mb-4">{{ total_count }} result{{ total_count|pluralize }} for "{{ query }}"</p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      {% include "components/product_grid.html" %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

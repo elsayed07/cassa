@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Cassa{% endblock %}</title>
+  {% load static %}
+  {% comment %}Tailwind CDN for dev — replace with compiled bundle in production{% endcomment %}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/htmx.org@2/dist/htmx.min.js"></script>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="h-full bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  {% include "components/navbar.html" %}
+
+  <main class="min-h-screen">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

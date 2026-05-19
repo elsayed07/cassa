@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Account — Cassa{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-12">
+  <h1 class="text-2xl font-bold mb-4">My Account</h1>
+  <p class="text-zinc-600 mb-6">Welcome back, {{ request.user.full_name }}</p>
+  <ul class="space-y-2">
+    <li><a href="{% url 'accounts:order-list' %}" class="text-violet-600 hover:underline">My Orders</a></li>
+    <li><a href="{% url 'accounts:wishlist' %}" class="text-violet-600 hover:underline">Wishlist</a></li>
+    <li><a href="{% url 'accounts:address-list' %}" class="text-violet-600 hover:underline">Addresses</a></li>
+  </ul>
+</div>
+{% endblock %}

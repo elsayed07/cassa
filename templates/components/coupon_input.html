@@ -1,0 +1,12 @@
+{% if cart.coupon %}
+  <p class="text-green-600 text-sm">Coupon <strong>{{ cart.coupon.code }}</strong> applied.
+    <button hx-post="{% url 'carts:coupon-remove' %}" hx-target="#coupon-section" class="text-red-500 ml-2">Remove</button>
+  </p>
+{% else %}
+  {% if error %}<p class="text-red-500 text-sm">{{ error }}</p>{% endif %}
+  <form hx-post="{% url 'carts:coupon-apply' %}" hx-target="#coupon-section" class="flex gap-2">
+    {% csrf_token %}
+    <input name="code" type="text" placeholder="Coupon code" class="input flex-1" required>
+    <button type="submit" class="btn-primary">Apply</button>
+  </form>
+{% endif %}

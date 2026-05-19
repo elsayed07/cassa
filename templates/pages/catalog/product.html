@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ product }} — Cassa{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-12">
+  <div class="grid md:grid-cols-2 gap-10">
+    <div>
+      {% with image=product.images.first %}
+        {% if image %}<img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="rounded-xl w-full">{% endif %}
+      {% endwith %}
+    </div>
+    <div>
+      <h1 class="text-3xl font-bold mb-2">{{ product }}</h1>
+      {% if review_summary.count %}
+        <p class="text-sm text-zinc-500 mb-4">{{ review_summary.avg }}★ ({{ review_summary.count }} reviews)</p>
+      {% endif %}
+      <form method="post" action="{% url 'carts:add' %}">
+        {% csrf_token %}
+        <select name="variant_id" class="select mb-4 w-full">
+          {% for variant in variants %}
+            <option value="{{ variant.id }}">{{ variant.name|default:variant.sku }} — {{ product.currency }} {{ variant.price }}</option>
+          {% endfor %}
+        </select>
+        <input name="quantity" type="number" value="1" min="1" class="input mb-4 w-20">
+        <button type="submit" class="w-full py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition"
+                hx-post="{% url 'carts:add' %}" hx-target="#cart-feedback" hx-include="[name='variant_id'],[name='quantity']">
+          Add to Cart
+        </button>
+      </form>
+      <div id="cart-feedback" class="mt-2"></div>
+      <div class="mt-6 prose dark:prose-invert">{{ product.description }}</div>
+    </div>
+  </div>
+
+  {% if recommendations %}
+    <section class="mt-16">
+      <h2 class="text-xl font-bold mb-4">Customers also bought</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {% for p in recommendations %}{% include "components/product_card.html" with product=p %}{% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}

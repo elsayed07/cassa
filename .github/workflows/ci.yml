@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.13"
+      - run: uv sync --dev
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run pyright
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings
+          DJANGO_ENV: testing
+          SECRET_KEY: ci-test-secret
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: cassa
+          POSTGRES_USER: cassa
+          POSTGRES_PASSWORD: cassa
+        options: >-
+          --health-cmd "pg_isready -U cassa"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 6379:6379
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.13"
+      - run: uv sync --dev
+      - name: Migrate
+        run: uv run python manage.py migrate --noinput
+        env:
+          DJANGO_ENV: testing
+          SECRET_KEY: ci-test-secret
+          DB_HOST: localhost
+          DB_NAME: cassa
+          DB_USER: cassa
+          DB_PASSWORD: cassa
+          REDIS_URL: redis://localhost:6379/0
+      - name: Test
+        run: uv run pytest --cov-fail-under=70
+        env:
+          DJANGO_ENV: testing
+          SECRET_KEY: ci-test-secret
+          DB_HOST: localhost
+          DB_NAME: cassa
+          DB_USER: cassa
+          DB_PASSWORD: cassa
+          REDIS_URL: redis://localhost:6379/0
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          fail_ci_if_error: false
+
+  migration-lint:
+    name: Migration Safety Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.13"
+      - run: uv sync --dev
+      - run: uv run python manage.py lintmigrations --no-cache
+        env:
+          DJANGO_ENV: testing
+          SECRET_KEY: ci-test-secret
+          DB_HOST: localhost
+          DB_NAME: cassa
+          DB_USER: cassa
+          DB_PASSWORD: cassa
+        continue-on-error: true

@@ -1,0 +1,8 @@
+Order Confirmed — #{{ order.number }}
+
+Thank you for your order!
+
+{% for item in order.items.all %}{{ item.quantity }}× {{ item.product_name }} — {{ order.currency }} {{ item.line_total }}
+{% endfor %}
+
+Total: {{ order.currency }} {{ order.grand_total }}
