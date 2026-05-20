@@ -8,7 +8,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U cassa"]
       interval: 5s
@@ -53,6 +53,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
+      - django_venv:/app/.venv
     ports:
       - "8000:8000"
     env_file: .env
@@ -77,6 +78,7 @@ services:
     command: python -m celery -A infrastructure.celery worker --loglevel=info --concurrency=2
     volumes:
       - .:/app
+      - celery_venv:/app/.venv
     env_file: .env
     environment:
       DJANGO_ENV: development
@@ -96,6 +98,7 @@ services:
     command: python -m celery -A infrastructure.celery beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
       - .:/app
+      - celery_beat_venv:/app/.venv
     env_file: .env
     environment:
       DJANGO_ENV: development
@@ -111,3 +114,6 @@ volumes:
   postgres_data:
   redis_data:
   minio_data:
+  django_venv:
+  celery_venv:
+  celery_beat_venv:
