@@ -43,25 +43,22 @@ Production-grade Django 5 ecommerce platform.
 **Prerequisites**: Docker Desktop, Python 3.13, [`uv`](https://docs.astral.sh/uv/)
 
 ```bash
-git clone https://github.com/elsayedghoonaim/cassa.git
+git clone https://github.com/elsayed07/cassa.git
 cd cassa
 
-# Install Python dependencies
+# Install Python deps (required for local linting, type checking, and IDE support)
 uv sync
 
 # Configure environment
 cp .env.example .env
 # Edit .env — at minimum set SECRET_KEY, DB_*, REDIS_URL, and STRIPE_* keys
 
-# Start backing services (PostgreSQL, Redis, MinIO, Mailpit)
+# Start all services (Django, PostgreSQL, Redis, MinIO, Mailpit)
 make up
 
-# Run migrations and seed dev data
+# Apply migrations and load dev data
 make migrate
 make seed
-
-# Start dev server + Tailwind watcher
-make dev
 ```
 
 Open [http://localhost:8000](http://localhost:8000) — admin at [http://localhost:8000/admin/](http://localhost:8000/admin/)
@@ -85,15 +82,22 @@ Dev services:
 ## Development
 
 ```bash
-make dev          # runserver + Tailwind watch
-make test         # pytest with coverage report
-make lint         # ruff check + format
-make typecheck    # pyright
-make migrate      # makemigrations + migrate
-make seed         # populate dev data
-make messages     # extract + compile i18n strings
-make shell        # Django shell_plus
-make logs         # docker compose logs -f
+make up             # start all services in the background
+make dev            # start all services in the foreground (logs to terminal)
+make down           # stop all services
+make logs           # tail service logs
+make migrate        # apply pending migrations
+make migrations     # generate new migrations
+make test           # run pytest with coverage
+make test-cov       # run pytest with HTML coverage report
+make lint           # ruff check
+make format         # ruff format + autofix
+make typecheck      # pyright
+make seed           # populate dev data
+make messages       # extract i18n strings
+make shell          # Django shell
+make bash           # shell into the Django container
+make clean          # stop services and remove volumes
 ```
 
 ## Testing
@@ -118,8 +122,8 @@ Run tests:
 
 ```bash
 make test
-# or directly:
-uv run pytest --tb=short -q
+# or directly inside the container:
+docker compose exec django python -m pytest --tb=short -q
 ```
 
 ## Stripe
