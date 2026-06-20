@@ -1,6 +1,29 @@
 # Cassa
 
-Production-grade Django 5 ecommerce platform.
+Production-grade Django 5 ecommerce platform — a server-rendered storefront (HTMX +
+Alpine + Tailwind), a fully-featured Django admin that doubles as the seller dashboard,
+and a versioned REST API, all backed by Stripe payments, atomic inventory, and a
+Celery task pipeline.
+
+## Demo & screenshots
+
+A quick walkthrough — storefront, the auto-generated REST API, and the Django admin
+seller dashboard:
+
+<p align="center">
+  <img src="docs/screenshots/demo.gif" alt="Cassa walkthrough" width="100%">
+</p>
+
+The Django admin is the seller's control panel across the whole domain — catalog,
+orders, payments, coupons, and reviews:
+
+| Seller dashboard (Django admin) | Coupon management |
+| :---: | :---: |
+| <img src="docs/screenshots/admin-dashboard.png" alt="Django admin — seller dashboard" width="420"> | <img src="docs/screenshots/admin-coupons.png" alt="Coupon management in the admin" width="420"> |
+
+| Versioned REST API (OpenAPI / Swagger) | Storefront |
+| :---: | :---: |
+| <img src="docs/screenshots/api-docs.png" alt="Django Ninja REST API docs" width="420"> | <img src="docs/screenshots/storefront.png" alt="Storefront catalog" width="420"> |
 
 ## Features
 
