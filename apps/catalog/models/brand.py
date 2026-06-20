@@ -4,6 +4,10 @@ from django.db import models
 from django.utils.text import slugify
 from parler.models import TranslatableModel, TranslatedFields
 
+from apps.catalog.models.managers import (
+    AllObjectsTranslatableManager,
+    SoftDeleteTranslatableManager,
+)
 from shared.models import BaseModel
 
 
@@ -16,6 +20,9 @@ class Brand(BaseModel, TranslatableModel):
     logo = models.ImageField(upload_to="brands/", blank=True)
     website = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
+
+    objects = SoftDeleteTranslatableManager()
+    all_objects = AllObjectsTranslatableManager()
 
     class Meta(BaseModel.Meta):
         db_table = "catalog_brand"

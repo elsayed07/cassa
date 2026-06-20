@@ -10,6 +10,10 @@ from parler.models import TranslatableModel, TranslatedFields
 
 from apps.catalog.models.brand import Brand
 from apps.catalog.models.category import Category
+from apps.catalog.models.managers import (
+    AllObjectsTranslatableManager,
+    SoftDeleteTranslatableManager,
+)
 from shared.models import BaseModel
 
 
@@ -38,6 +42,9 @@ class Product(BaseModel, TranslatableModel):
     currency = models.CharField(max_length=3, default="USD")
     weight = models.DecimalField(max_digits=8, decimal_places=3, null=True, blank=True)
     search_vector = SearchVectorField(null=True, blank=True)
+
+    objects = SoftDeleteTranslatableManager()
+    all_objects = AllObjectsTranslatableManager()
 
     class Meta(BaseModel.Meta):
         db_table = "catalog_product"

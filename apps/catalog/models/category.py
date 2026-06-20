@@ -5,6 +5,8 @@ from django.utils.text import slugify
 from parler.models import TranslatableModel, TranslatedFields
 from treebeard.mp_tree import MP_Node
 
+from apps.catalog.models.managers import TranslatableMPNodeManager
+
 
 class Category(MP_Node, TranslatableModel):
     """Materialized-path category tree with translated names."""
@@ -19,6 +21,8 @@ class Category(MP_Node, TranslatableModel):
     image = models.ImageField(upload_to="categories/", blank=True)
     is_active = models.BooleanField(default=True)
     sort_order = models.PositiveSmallIntegerField(default=0, db_index=True)
+
+    objects = TranslatableMPNodeManager()
 
     node_order_by = ["sort_order", "slug"]
 
