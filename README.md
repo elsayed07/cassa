@@ -17,9 +17,9 @@ seller dashboard:
 The Django admin is the seller's control panel across the whole domain — catalog,
 orders, payments, coupons, and reviews:
 
-| Seller dashboard (Django admin) | Coupon management |
+| Seller dashboard (Django admin) | Product catalog management |
 | :---: | :---: |
-| <img src="docs/screenshots/admin-dashboard.png" alt="Django admin — seller dashboard" width="420"> | <img src="docs/screenshots/admin-coupons.png" alt="Coupon management in the admin" width="420"> |
+| <img src="docs/screenshots/admin-dashboard.png" alt="Django admin — seller dashboard" width="420"> | <img src="docs/screenshots/admin-products.png" alt="Product catalog in the Django admin" width="420"> |
 
 | Versioned REST API (OpenAPI / Swagger) | Storefront |
 | :---: | :---: |
